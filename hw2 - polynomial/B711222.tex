@@ -1,0 +1,695 @@
+%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.4 (15/5/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com) with extensive modifications by
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside,twocolumn]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[hangul]{kotex}
+
+\newenvironment{itemizeReduced}{
+\begin{list}{\labelitemi}{\leftmargin=1em}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}}{\end{list}
+}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+      language = C++,
+      numbers=left,
+      stepnumber=1,
+      basicstyle=\ttfamily,
+      columns=fullflexible,
+      breaklines=true,
+      postbreak=\mbox{\textcolor{pink}{$\hookrightarrow$}\space}
+      escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+      frame=tb, % draw a frame at the top and bottom of the code block
+      tabsize=4, % tab space width
+      showstringspaces=false, % don't mark spaces in strings
+      commentstyle=\color{yellow}, % comment color
+      keywordstyle=\color{blue}, % keyword color
+      stringstyle=\color{green},
+}
+\usepackage{blindtext} % Package to generate dummy text throughout this template 
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.13} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+
+\usepackage{enumitem} % Customized lists
+\setlist[itemize]{noitemsep} % Make itemize lists more compact
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\roman{subsection}} % roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+% Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage{titling} % Customizing the title section
+
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\setlength{\droptitle}{-4\baselineskip} % Move the title up
+
+\pretitle{\begin{center}\Huge\bfseries} % Article title formatting
+\posttitle{\end{center}} % Article title closing formatting
+\title{자료구조 HW2} % Article title
+\author{%
+\normalsize B711222 \textsc{박조은} \\ % Your name
+\normalsize Hongik University \\ % Your institution
+\normalsize \href{mailto:mrnglory@mail.hongik.ac.kr}{mrnglory@mail.hongik.ac.kr} % Your email address
+%\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
+%\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
+%\normalsize University of Utah \\ % Second author's institution
+%\normalsize \href{mailto:jane@smith.com}{jane@smith.com} % Second author's email address
+}
+\date{\today} % Leave empty to omit a date
+\renewcommand{\maketitlehookd}{%
+
+}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+% Print the title
+\maketitle
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{List of Source Files}
+\begin{itemizeReduced}
+\item hw2a
+\begin{itemizeReduced}
+    \item polya.h
+    \item polya.cpp
+    \item hw2a.cpp
+    \end{itemizeReduced}
+\item hw2b
+\begin{itemizeReduced}
+    \item polyb.h
+    \item polyb.cpp
+    \item hw2b.cpp
+    \end{itemizeReduced}
+\end{itemizeReduced}
+%------------------------------------------------
+
+\section{hw2a}
+
+\subsection{polya.h}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+#ifndef POLYNOMIAL_H
+#define POLYNOMIAL_H
+using namespace std;
+
+class Polynomial;
+class Term {
+public:
+        friend class Polynomial;
+        friend ostream& operator << (ostream&, Polynomial&);
+        friend istream& operator >> (istream&, Polynomial&);
+
+private:
+        float coef;
+        int exp;
+};
+
+class Polynomial {
+public:
+        Polynomial();
+        Polynomial operator + (Polynomial&);
+        void NewTerm(const float, const int);
+friend ostream& operator << (ostream&, Polynomial&);
+friend istream& operator >> (istream&, Polynomial&);
+
+private:
+        Term *termArray;
+        int capacity;
+        int terms;
+};
+#endif
+\end{lstlisting}
+\begin{itemizeReduced}
+    \item[/*] 
+    \item[*] line 2, 3, 31: 헤더파일 중복으로 발생할 수 있는 문제를 막기 위해 \#ifndef \#endif \#define 전처리기 사용
+    \item[*] line 7: Term class 생성
+    \item[*] line 6: 밑의 class Term{} 에서 Polynomial 선언 가능케 하도록 미리 호출
+    \item[*] line 9 - 11: 다른 클래스의 friend로 선언된 멤버들간에 상호 접근할 수 있게 friend 키워드 선언
+    \item[*] line 10: output operator overloading
+    \item[*] line 11: input operator overloading
+    \item[*] line 13 - 15: private 타입의 멤버변수 coef, exp 는 각각 polynomial 의 계수와 지수를 지칭
+    \item[*] line 20: 다항식 p(x) = 0 을 생성
+    \item[*] line 21: plus operator overloading
+    \item[*] line 22: 새로운 항의 추가 및 배열의 크기를 두 배로 확장하는 기능을 가진 public 타입의 멤버함수 선언 \\ (polya.cpp file 의 line 71 - 84 에서 구현)
+    \item[*] line 26 - 29: Polynomial의 전용 데이터 멤버 선언
+    \item[*] line 27: 0 이 아닌 항의 배열
+    \item[*] line 28: termArray 의 크기
+    \item[*] line 29: 0 이 아닌 항의 갯수
+\end{itemizeReduced}
+*/
+
+\newpage
+
+\subsection{polya.cpp}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+#include "polya.h"
+using namespace std;
+
+istream& operator >> (istream& is, Polynomial& p)
+{
+        int noofterms;
+        float coef;
+        int exp;
+
+        is >> noofterms;
+
+        for (int i = 0; i < noofterms; i++)
+        {
+                is >> coef >> exp;
+                p.NewTerm(coef, exp);
+        }
+        return is;
+}
+
+ostream& operator << (ostream& os, Polynomial& p)
+{
+        for (int i = 0; i < p.terms; i++)
+        {
+                if (p.termArray[i].coef > 0)
+                {
+                        if (i != 0)
+                        {
+                                if (p.termArray[i].coef != 1)
+                                        os << "+" << p.termArray[i].coef;
+                                else
+                                        os << "+";
+                        }
+                        else
+                                if (p.termArray[i].coef != 1)
+                                        os << p.termArray[i].coef;
+                }
+
+                if (p.termArray[i].coef < 0)
+                {
+                        if (p.termArray[i].coef != -1)
+                                os << p.termArray[i].coef;
+                        else
+                                os << "-";
+                }
+
+                if (p.termArray[i].exp != 0)
+                        os << "x^" << p.termArray[i].exp;
+
+                for (int j = i + 1; j < p.terms; j++)
+                {
+                        if (p.termArray[i].exp == p.termArray[j].exp)
+                        {
+                                p.termArray[i].coef += p.termArray[j].coef;
+                                p.termArray[j] = p.termArray[p.terms - 1];
+                                p.terms--;
+                        }
+                }
+
+        }
+
+        os << endl;
+        return os;
+}
+
+Polynomial::Polynomial():capacity(1), terms(0)
+{
+        termArray = new Term[capacity];
+}
+
+void Polynomial::NewTerm(const float theCoef, const int theExp) // theCoeff -> theCoef
+{
+        if (terms == capacity)
+        {
+                capacity *= 2;
+                Term * temp = new Term [capacity];
+                copy(termArray, termArray + terms, temp);
+                delete [] termArray;
+                termArray = temp;
+        }
+
+        termArray[terms].coef = theCoef;
+        termArray[terms++].exp = theExp;
+}
+
+Polynomial Polynomial::operator + (Polynomial& b)
+{
+        Polynomial c;
+        int aPos = 0, bPos = 0;
+
+        while ((aPos < terms) && (bPos < b.terms))
+        {
+                if (termArray[aPos].exp == b.termArray[bPos].exp)
+                {
+                        float t = termArray[aPos].coef + b.termArray[bPos].coef;
+                        if (t)
+                                c.NewTerm(t, termArray[aPos].exp);
+                        aPos++;
+                        bPos++;
+                }
+                else if (termArray[aPos].exp < b.termArray[aPos].exp)
+                {
+                        c.NewTerm(b.termArray[bPos].coef, b.termArray[bPos].exp);
+                        bPos++;
+                }
+                else
+                {
+                        c.NewTerm(termArray[aPos].coef, termArray[aPos].exp);
+                        aPos++;
+                }
+        }
+
+        for (; aPos < terms; aPos++)
+                c.NewTerm(termArray[aPos].coef, termArray[aPos].exp);
+
+        for (; bPos < terms; bPos++)
+                c.NewTerm(b.termArray[bPos].coef, b.termArray[bPos].exp);
+
+        for (int i = 0; i < c.terms; i++)       // 내림차순 정렬
+                for (int j = i + 1; j < c.terms; j++)
+                        if (c.termArray[i].exp < c.termArray[j].exp)
+                        {
+                                Term temp = c.termArray[i];
+                                c.termArray[i] = c.termArray[j];
+                                c.termArray[j] = temp;
+                        }
+
+        return c;
+}
+\end{lstlisting}
+\begin{itemizeReduced}
+    \item[/*] 
+    \item[*] line 5 - 19: poly.in file 에 적힌 값을 불러 들여서 각각 항의 갯수, 계수 및 지수라는 정보로 저장하는 과정
+    \item[*] line 7: 항의 갯수 정보 값 저장 공간
+    \item[*] line 8: 각 항의 계수 정보 값 저장 공간
+    \item[*] line 9: 각 항의 지수 정보 값 저장 공간
+    \item[*] line 13: 각 항의 계수 및 지수 정보를 들여오는 반복문의 횟수를 해당 다항식의 항의 갯수인 noofterms 의 값 만큼 실행
+    \item[*] line 21 - 64: 입력 받은 polynomial 을 실제 수식의 형태로 경우에 따라 적절히 출력 해주는 함수 구현
+    \item[*] line 23: polynomial 의 항의 갯수 만큼 반복문 수행
+    \item[*] line 25: 계수가 양수일 경우
+    \item[*] line 27: 초항이 아닐 경우
+    \item[*] line 29 - 30: 계수가 1 이 아닐 경우, + 기호와 계수를 함께 출력한다.
+    \item[*] line 31: 계수가 1 일 경우, 계수를 출력하지 않고 + 기호만 출력한다.
+    \item[*] line 34: 초항일 경우
+    \item[*] line 35 - 36: 계수가 1이 아닐 경우, + 기호 없이 계수만 출력한다.
+    \item[*] line 39: 계수가 음수일 경우
+    \item[*] line 41: 계수가 -1 이 아닐 경우
+    \item[*] line 42: 계수에 - 부호가 이미 붙어있으므로 계수 자체를 출력한다.
+    \item[*] line 43: 계수가 -1 일 경우
+    \item[*] line 44: - 부호만 붙인다.
+    \item[*] line 47: 지수가 0 이 아닐 경우, 즉 상수항이 아닐 경우
+    \item[*] line 48: x 의 exp 승의 표현 형태를 출력한다.
+    \item[*] line 50: 같은 차수의 항끼리 합쳐서 하나의 항으로 표현하는 코드
+    \item[*] line 52: 서로 비교한 두 개의 항이 같은 차수일 경우
+    \item[*] line 54: 두 항의 계수를 합하여 index i 에 저장, 고로 하나의 항으로 합치기 위한 과정
+    \item[*] line 55: 차수가 같은 두 항 중 index j 항은 이미 index i 항과 합쳤으므로, 더 이상 고려 대상이 아니다. 따라서 index j 항을 삭제 해야 하며, 다항식 맨 뒤에 존재하고 있는 항, 즉 index p.terms - 1 항을 index j 항에 복사하여 index j 항을 날린다.
+    \item[*] line 56: 그리고 이미 index j 항에 복사 한 index p.terms - 1 항을 제거한다.
+    \item[*] line 66: Polynomial 의 기정 생성자가 capacity 와 terms 를 각각 0 과 1 로 초기화한다.
+    \item[*] line 68: capacity 의 크기인 Term 타입의 배열 termArray
+    \item[*] line 71: 새로운 항을 termArray 끝에 추가한다.
+    \item[*] line 73: termArray 가 꽉 찰 경우
+    \item[*] line 75: 배열의 크기를 나타내는 값 capacity 를 두 배로 확장한다.
+    \item[*] line 76: 크기가 capacity 인 Term 타입의 배열 temp 를 임시로 생성한다.
+    \item[*] line 77: 배열 temp 에 termArray 의 모든 원소들을 복사한다.
+    \item[*] line 78: termArray 의 이전 메모리를 반환한다.
+    \item[*] line 79: 배열 temp 에 임시로 복사해둔 모든 항들을 다시 배열 termArray 에 저장한다.
+    \item[*] line 82: 배열 termArray 에 새로운 계수 정보를 추가한다.
+    \item[*] line 83: 배열 termArray 의 항의 갯수를 증가시킨 자리에 새로운 지수 정보를 추가한다.
+    \item[*] line 86: *this 와 b 를 더한 결과를 반환한다.
+    \item[*] line 88: Polynomial 타입의 다항식 c 를 생성한다.
+    \item[*] line 89: 다항식 *this 와 b 의 각 항들의 계수 및 지수를 비교하기 위해 index 값을 나타내는 a position, b position 변수를 설정 및 초기화한다.
+    \item[*] line 93: *this 와 b 가 같은 차수의 항이 있을 경우
+    \item[*] line 95: 각 계수의 값들을 더한 결과를 실수형 변수 t 에 저장한다.
+    \item[*] line 96: 계수가 t 인 해당 차수 항을 다항식 c 에 새로운 항으로 추가한다.
+    \item[*] line 98, 99: aPos, bPos 를 1씩 증가시킨다.
+    \item[*] line 101 - 109: 다항식 c 에 차수를 내림차순으로 차곡차곡 저장한다.
+    \item[*] line 113 - 114: *this의 나머지 항들을 다항식 c 에 추가한다.
+    \item[*] line 116 - 117: 다항식 b 의 나머지 항들을 다항식 c 에 추가한다.
+    \item[*] line 119 - 126: c 에 새로 추가된 항들을 다시 전체적으로 내림차순 정렬 시켜준다.
+\end{itemizeReduced}
+*/
+
+\newpage
+
+\subsection{hw2a.cpp}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+using namespace std;
+#include "polya.h"
+int main()
+{
+        Polynomial p1, p2;
+
+        cin >> p1 >> p2;
+        Polynomial p3 = p1 + p2;
+        cout << p1 << p2 << p3;
+}
+\end{lstlisting}
+\begin{itemizeReduced}
+    \item[/*]
+    \item[*] line 6: Polynomial class 의 instance 로 p1, p2 를 정의한다.
+    \item[*] line 8: instance p1, p2 에 해당되는 다항식을 구성하는 값들을 입력 받아온다.
+    \item[*] line 9: 입력받은 두 개의 다항식을 덧셈하여 세로운 다항식에 저장한다.
+    \item[*] line 10: instance p1, p2 에 해당되는 다항식 및 다항식 덧셈 결과를 출력한다.
+\end{itemizeReduced}
+*/
+%------------------------------------------------
+
+\subsection{Results}
+\subsubsection{makefile}
+\begin{lstlisting} [basicstyle=\footnotesize]
+hw2a:hw2a.o polya.o
+        g++ -o hw2a hw2a.o polya.o
+hw2a.o polya.o:polya.h
+\end{lstlisting}
+
+\subsubsection{poly.in}
+\begin{lstlisting} [basicstyle=\footnotesize]
+3       3.0 5   2.0 3   -4.0 0
+4       1.0 8   -7.0 5  -1.0 3  -3.0 0
+\end{lstlisting}
+
+\subsubsection{compile}
+\begin{lstlisting} [basicstyle=\footnotesize]
+[B711222@localhost hw2d]$ ./hw2a < poly.in
+3x^5+2x^3-4
+x^8-7x^5-x^3-3
+x^8-4x^5+x^3-7
+\end{lstlisting}
+
+\clearpage
+
+\section{hw2b}
+\subsection{polyb.h}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#ifndef POLYNOMIAL_H
+#define POLYNOMIAL_H
+#include <iostream>
+using namespace std;
+
+class Polynomial;
+class Term {
+friend class Polynomial;
+friend ostream& operator << (ostream&, Polynomial&);
+friend istream& operator >> (istream&, Polynomial&);
+
+private:
+        float coef;
+        int exp;
+};
+
+class Polynomial {
+public:
+        Polynomial();
+        Polynomial operator + (Polynomial&);
+        Polynomial operator * (Polynomial&);
+        void NewTerm(const float, const int);
+
+friend ostream& operator << (ostream&, Polynomial&);
+friend istream& operator >> (istream&, Polynomial&);
+
+private:
+        Term *termArray;
+        int capacity;
+        int terms;
+};
+#endif
+\end{lstlisting}
+\begin{itemizeReduced}
+    \item[/*] hw2a 와 동일한 부분은 설명을 생략하도록 한다.
+    \item[*] line 21: multiply operator overloading
+\end{itemizeReduced}
+*/
+
+\subsection{polyb.cpp}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+#include "polyb.h"
+using namespace std;
+
+istream& operator >> (istream& is, Polynomial& p)
+{
+        int noofterms;
+        float coef;
+        int exp;
+
+        is >> noofterms;
+
+        for (int i = 0; i < noofterms; i++)
+        {
+                is >> coef >> exp;
+                p.NewTerm(coef, exp);
+        }
+        return is;
+}
+
+ostream& operator << (ostream& os, Polynomial& p)
+{
+        for (int i = 0; i < p.terms; i++)
+        {
+                if (p.termArray[i].coef > 0)
+                {
+                        if (i != 0)
+                        {
+                                if (p.termArray[i].coef != 1)
+                                        os << "+" << p.termArray[i].coef;
+                                else
+                                        os << "+";
+                        }
+                        else
+                                if (p.termArray[i].coef != 1)
+                                        os << p.termArray[i].coef;
+                }
+
+                if (p.termArray[i].coef < 0)
+                {
+                        if (p.termArray[i].coef != -1)
+                                os << p.termArray[i].coef;
+                        else
+                                os << "-";
+                }
+
+                if (p.termArray[i].exp != 0)
+                        os << "x^" << p.termArray[i].exp;
+        }
+
+        for (int i = 0; i < p.terms; i++)
+                for (int j = i + 1; j < p.terms; j++)
+                {
+                        if (p.termArray[i].exp < p.termArray[j].exp)
+                        {
+                                Term temp = p.termArray[i];
+                                p.termArray[i] = p.termArray[j];
+                                p.termArray[j] = temp;
+                        }
+                }
+
+        os << endl;
+        return os;
+}
+
+Polynomial::Polynomial():capacity(1), terms(0)
+{
+        termArray = new Term[capacity];
+}
+
+void Polynomial::NewTerm(const float theCoef, const int theExp) // theCoeff -> theCoef
+{
+        if (terms == capacity)
+        {
+                capacity *= 2;
+                Term * temp = new Term [capacity];
+                copy(termArray, termArray + terms, temp);
+                delete [] termArray;
+                termArray = temp;
+        }
+
+        termArray[terms].coef = theCoef;
+        termArray[terms++].exp = theExp;
+}
+
+Polynomial Polynomial::operator + (Polynomial& b)
+{
+        Polynomial c;
+        int aPos = 0, bPos = 0;
+
+        while ((aPos < terms) && (bPos < b.terms))
+        {
+                if (termArray[aPos].exp == b.termArray[bPos].exp)
+                {
+                        float t = termArray[aPos].coef + b.termArray[bPos].coef;
+                        if (t)
+                                c.NewTerm(t, termArray[aPos].exp);
+                        aPos++;
+                        bPos++;
+                }
+                else if (termArray[aPos].exp < b.termArray[aPos].exp)
+                {
+                        c.NewTerm(b.termArray[bPos].coef, b.termArray[bPos].exp);
+                        bPos++;
+                }
+                else
+                {
+                        c.NewTerm(termArray[aPos].coef, termArray[aPos].exp);
+                        aPos++;
+                }
+        }
+
+        for (; aPos < terms; aPos++)
+                c.NewTerm(termArray[aPos].coef, termArray[aPos].exp);
+
+        for (; bPos < terms; bPos++)
+                c.NewTerm(b.termArray[bPos].coef, b.termArray[bPos].exp);
+
+        return c;
+}
+
+Polynomial Polynomial::operator * (Polynomial& b)
+{
+        Polynomial c;
+        int aPos = 0, bPos = 0;
+
+        for (aPos = 0; aPos < terms; aPos++)
+        {
+                for (bPos = 0; bPos < b.terms; bPos++)
+                {
+                        int tempCoef = termArray[aPos].coef * b.termArray[bPos].coef;
+                        int tempExp = termArray[aPos].exp + b.termArray[bPos].exp;
+
+                        c.NewTerm(tempCoef, tempExp);
+                }
+        }
+
+        for (int i = 0; i < c.terms; i++)
+        {
+                for (int j = i + 1; j < c.terms; j++)
+                {
+                        if (c.termArray[i].exp == c.termArray[j].exp)
+                        {
+                                c.termArray[i].coef += c.termArray[j].coef;
+                                c.termArray[j] = c.termArray[c.terms - 1];
+                                c.terms--;
+                        }
+                }
+        }
+
+        for (int i = 0; i < c.terms; i++)       // 내림차순 정렬
+                for (int j = i + 1; j < c.terms; j++)
+                        if (c.termArray[i].exp < c.termArray[j].exp)
+                        {
+                                Term temp = c.termArray[i];
+                                c.termArray[i] = c.termArray[j];
+                                c.termArray[j] = temp;
+                        }
+
+        return c;
+}
+\end{lstlisting}
+\begin{itemizeReduced}
+    \item[/*] hw2a 와 동일한 부분은 설명을 생략하도록 한다.
+    \item[*] line 122: *this 와 b 를 곱한 결과를 반환한다.
+    \item[*] line 138 - 149: 곱셈을 통해 같은 차수의 항이 발생하는 경우를 처리하기 위하여, 각 항들을 하나의 항으로 합친 뒤 연산 후 더 이상 필요하지 않은 항들을 제거하는 코드를 다항식 곱셈 함수에 다시 작성하였다.
+\end{itemizeReduced}
+*/
+
+\subsection{hw2b.cpp}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+using namespace std;
+#include "polyb.h"
+
+int main()
+{
+        Polynomial p1, p2;
+
+        cin >> p1 >> p2;
+        Polynomial p3 = p1 * p2;
+        cout << p1 << p2 << p3;
+}
+\end{lstlisting}
+\begin{itemizeReduced}
+    \item[/*] hw2a 와 동일한 부분은 설명을 생략하도록 한다.
+    \item[*] line 10 - 11: 다항식 곱셈 연산 결과를 Polynomial 타입의 p3 에 새로이 저장 및 각 다항식들을 출력한다.
+\end{itemizeReduced}
+*/
+
+\subsection{results}
+\subsubsection{makefile}
+\begin{lstlisting} [basicstyle=\footnotesize]
+hw2b:hw2b.o polyb.o
+        g++ -o hw2b hw2b.o polyb.o
+hw2b.o polyb.o:polyb.h
+\end{lstlisting}
+
+\subsubsection{poly.in}
+\begin{lstlisting} [basicstyle=\footnotesize]
+3       3.0 5   2.0 3   -4.0 0
+4       1.0 8   -7.0 5  -1.0 3  -3.0 0
+\end{lstlisting}
+
+\subsubsection{compile}
+\begin{lstlisting} [basicstyle=\footnotesize]
+[B711222@localhost hw2d]$ ./hw2b < poly.in
+3x^5+2x^3-4
+x^8-7x^5-x^3-3
+3x^13+2x^11-21x^10-21x^8-2x^6+19x^5-2x^3+12
+\end{lstlisting}
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
