@@ -1,0 +1,532 @@
+%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.4 (15/5/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com) with extensive modifications by
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside,twocolumn]{article}
+\usepackage{graphicx}
+
+\usepackage{color}
+\usepackage[utf8]{inputenc}
+\usepackage[hangul]{kotex}
+
+\newenvironment{itemizeReduced}{
+\begin{list}{\labelitemi}{\leftmargin=1em}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}}{\end{list}
+}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+      %backgroundcolor = \color{lightgray},
+      language = C++,
+      numbers=left,
+      stepnumber=1,
+      basicstyle=\ttfamily,
+      columns=fullflexible,
+      breaklines=true,
+      postbreak=\mbox{\textcolor{pink}{$\hookrightarrow$}\space}
+      escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+      frame=tb, % draw a frame at the top and bottom of the code block
+      tabsize=4, % tab space width
+      showstringspaces=false, % don't mark spaces in strings
+      commentstyle=\color{yellow}, % comment color
+      keywordstyle=\color{blue}, % keyword color
+      stringstyle=\color{green},
+}
+
+\usepackage{blindtext} % Package to generate dummy text throughout this template 
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.13} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+
+\usepackage{enumitem} % Customized lists
+\setlist[itemize]{noitemsep} % Make itemize lists more compact
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\roman{subsection}} % roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+% Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage{titling} % Customizing the title section
+
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\setlength{\droptitle}{-4\baselineskip} % Move the title up
+
+\pretitle{\begin{center}\Huge\bfseries} % Article title formatting
+\posttitle{\end{center}} % Article title closing formatting
+\title{자료구조 HW5} % Article title
+\author{%
+\normalsize B711222 \textsc{박조은} \\ % Your name
+\normalsize Hongik University \\ % Your institution
+\normalsize \href{mailto:mrnglory@mail.hongik.ac.kr}{mrnglory@mail.hongik.ac.kr} % Your email address
+%\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
+%\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
+%\normalsize University of Utah \\ % Second author's institution
+%\normalsize \href{mailto:jane@smith.com}{jane@smith.com} % Second author's email address
+}
+\date{\today} % Leave empty to omit a date
+\renewcommand{\maketitlehookd}{%
+
+}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+% Print the title
+\maketitle
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{List of Source Files}
+\begin{itemizeReduced}
+\item hw5
+\begin{itemizeReduced}
+    \item hw5.cpp
+    \item post.cpp
+    \item post.h
+    \end{itemizeReduced}
+\end{itemizeReduced}
+%------------------------------------------------
+
+\section{hw5}
+
+\subsection{hw5.cpp}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+#include "post.h"
+using namespace std;
+
+void PostFix(Expression);
+
+int main()
+{
+	char line[MAXLEN];
+
+	while (cin.getline(line, MAXLEN))
+	{
+		Expression e(line);	// line 버퍼를 이용하여 Expression 을 만듦
+
+		try {
+			PostFix(e);
+		} catch (char const *msg) {
+			cerr << "Exception: " << msg << endl;
+		}
+	}
+}
+\end{lstlisting}
+
+\subsection{post.cpp}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+#include <stack>
+#include "post.h"
+using namespace std;
+
+bool Token::operator == (char b)
+{
+	return len == 1 && str[0] == b;
+}
+
+bool Token::operator != (char b)
+{
+	return len != 1 || str[0] != b;
+}
+
+Token::Token() {}
+
+Token::Token(char c) : len(1), type(c)
+{
+	str = new char[1];
+	str[0] = c;	// default type = c itself
+}
+
+Token::Token(char c, char c2, int ty) : len(2), type(ty)
+{
+	str = new char[2];
+	str[0] = c;
+	str[1] = c2;
+}
+
+Token::Token(char *arr, int l, int ty = ID) : len(l), type(ty)
+{
+	str = new char[len + 1];
+
+	for (int i = 0; i < len; i++)
+		str[i] = arr[i];
+
+	str[len] = '\0';
+
+	if (type == NUM)
+	{
+		ival == arr[0] - '0';
+
+		for (int i = 1; i < len; i++)
+			ival = ival * 10 + arr[i] - '0';
+	}
+
+	else if (type == ID)
+		ival = 0;
+
+	else
+		throw "must be ID or NUM";
+}
+
+bool Token::IsOperand()
+{
+	return type == ID || type == NUM;
+}
+
+ostream& operator << (ostream& os, Token t)
+{
+	if (t.type == UMINUS)
+		os << "-u";
+
+	else if (t.type == NUM)
+		os << t.ival;
+
+	else
+		for (int i = 0; i < t.len; i++)
+			os << t.str[i];
+
+	os << " ";
+
+	return ps;
+}
+
+bool GetID(Expression& e, Token& tok)
+{
+	char arr[MAXLEN];
+	int idlen = 0;
+	char c = e.str[e.pos];
+
+	if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z'))
+		return false;
+
+	arr[idlen++] = c;
+	e.pos++;
+
+	while ((c = e.str[e.pos]) >= 'a' && c <= 'z'
+		|| c >= 'A' && c <= 'Z'
+		|| c >= '0' && c <= '9')
+	{
+		arr[idlen++] = c;
+		e.pos++;
+	}
+
+	arr[idlen] = '\0';
+	tok = Token(arr, idlen, ID);	// return an ID
+
+	return true;
+}
+
+bool GetInt (Expression& e, Token& tok)
+{
+	char arr[MAXLEN];
+	int len = 0;
+	char c = e.str[e.pos];
+	
+	if (!(c > = '0' && c <= '9'))
+		return false;
+	
+	arr[len++] = c;
+	e.pos++;
+	
+	while ((c = e.str[e.pos]) >= '0' && c <= '9')
+	{
+		arr[len++] = c;
+		e.pos++;
+	}
+	
+	arr[len] = '\0';
+	tok = Token(arr, len);
+	
+	return true;
+}
+
+void SkipBlanks(Expression& e)
+{
+	char c;
+
+	while (e.pos < e.len && ((c = e.str[e.pos]) == ' ' || c == '\t'))
+		e.pos++;
+}
+
+bool TwoCharOp(Expression& e, Token& tok)
+{
+	// 7가지 두 글자 토큰들 // <= >= == != && || -u 을 처리
+	char c = e.str[e.pos];
+	char c2 = e.str[e.pos + 1];
+	int op;	// LE GE EQ NE AND OR UMINUS
+
+	if (c == '<' && c2 == '=')
+		op = LE;
+
+	else if
+
+	else
+		return false;	// 맞는 두 글자 토큰이 아니면 false 를 return
+
+	tok = Token (c, c2, op);
+	e.pos += 2;
+
+	return true;
+}
+
+bool OneCharOp(Expression& e, Token& tok)
+{
+	char c = e.str[e.pos];
+
+	if (c == '-' || c == '!' || c == '*' || c == '/' || c == '%' || 
+		c == '+' || c == '<' || c == '>' || c == '(' || c == ')' || c == '=')
+	{
+		tok = Token(c);
+		e.pos++;
+
+		return true;
+	}
+
+	return false;
+}
+
+Token NextToken(Expression& e, bool INFIX = true)
+{
+	static bool oprrFound = true;	// 종전에 연산자 발견되었다고 가정
+	Token tok;
+	SkipBlanks(e);	// skip blanks if any
+
+	if (e.pos == e.len)	// No more token left in this expression
+	{
+		if (INFIX)
+			oprrFound = true;
+
+		return Token('#');
+	}
+
+	if (GetID(e, tok) || GetINT(e, tok))
+	{
+		if (INFIX)
+			oprrFound = false;
+
+		return tok;
+	}
+
+	if (TwoCharOp(e, tok) || OneCharOp(e, tok))
+	{
+		if (tok.type == '-' && INFIX && oprrFound)	// operator 후 - 발견
+			tok = Token('-', 'u', UMINUS);	// unary minus (-u)로 바꾸시오
+
+		if (INFIX)
+			oprrFound = true;
+
+		return tok;
+	}
+
+	throw "Illegal Character Found";
+}
+
+int icp(Token& t)
+{
+	// in-coming priority
+
+	int ty = t.type;
+	
+	if (t.type == '(')
+		return 0;
+	
+	else if (t.type == UMINUS || t.type == '!')
+		return 1;
+	
+	else if (t.type == '*' || t.type == '/' || t.type == '%')
+		return 2;
+	
+	else if (t.type == '+' || t.type == '-')
+		return 3;
+	
+	else if (t.type == '<' || t.type == '>' || t.type == LE || t.type == GE)
+		return 4;
+	
+	else if (t.type == EQ || t.type == NE)
+		return 5;
+	
+	else if (t.type == AND)
+		return 6;
+	
+	else if (t.type === OR)
+		return 7;
+	
+	else if (t.type == '=')
+		return 8;
+	
+	else if (t.type == '#')
+		return 9;
+}
+
+int isp(Token& t)
+{
+	// in-stack priority
+	
+	if (t.type == '(')
+		return 10;
+	
+	else
+		return icp(t);
+}
+
+void PostFix(Expression e)
+{
+	// HINT: STL stack 이용하고, 교재의 마지막 for 문으로
+	// while (stack.top() != '#') { cout << stack.top(); stack.pop();}
+	// stack.pop();
+	
+	stack<Token> stack;
+	stack.push('#');
+	
+	for (Token x = NextToken(e); x != '#'; x = NextToken(e))
+	{
+		if (x.IsOperand())
+			cout << x;
+		
+		else if (x == ')')
+		{
+			for (; stack.top() != '('; stack.pop())
+				cout << stack.top();
+			stack.pop();
+		}
+		
+		else
+		{
+			for (; isp(stack.top()) <= icp(x); stack.pop())
+				cout << stack.top();
+			stack.push(x);
+		}
+		
+		while (stack.top() != '#')
+		{
+			cout << stack.top();
+			stack.pop();
+		}
+		
+		cout << endl;
+	}
+}
+\end{lstlisting}
+
+\subsection{post.h}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#ifndef POSTFIX_H
+#define POSTFIX_H
+// token types for non one-char tokens
+#define ID	257
+#define NUM	258
+#define EQ	259
+#define NE	260
+#define GE	261
+#define LE	262
+#define AND	263
+#define OR	264
+#define UMINUS	265
+#define MAXLEN	80
+
+struct Expression
+{
+	Expression (char* s): str(s), pos(0)
+	{for (len = 0; str[len] != '\0'; len++);}
+
+	char * str;
+	int pos;
+	int len;
+};
+
+struct Token
+{
+	bool operator == (char);
+	bool operator != (char);
+
+	Token();
+
+	Token(char);		// 1-char token: type equals the token itself
+	Token(char, char, int);	// 2-char token (e.g. <=) & its type (e.g. LE)
+	Token(char*, int, int);	// operand with its length & type (defaulted to ID)
+	bool IsOperand();	// true if the token type is ID or NUM
+	int type;		// ascii code for 1-char op; predefined for other tokens
+	char *str;		//token value
+	int len;		// length of str
+	int ival;		// used to store an integer for type NUM; init to 0 for ID
+};
+
+using namespace std;
+ostream& operator << (ostream&, Token);
+osteram& operator << (ostream&, Expression);
+Token NextToken(Expression&, bool);	// 2nd arg = true for infix expression
+void PostFix(Expression e);
+
+#endif
+\end{lstlisting}
+\begin{itemizeReduced}
+    \item[/*] 
+    \item[*] 갓직히 왜 컴파일이 안되는지 납득이 안됨.
+\end{itemizeReduced}
+*/
+
+%------------------------------------------------
+
+\newpage
+
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
