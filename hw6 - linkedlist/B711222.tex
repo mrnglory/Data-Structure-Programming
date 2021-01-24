@@ -1,0 +1,465 @@
+%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.4 (15/5/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com) with extensive modifications by
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside,twocolumn]{article}
+\usepackage{graphicx}
+
+\usepackage{color}
+\usepackage[utf8]{inputenc}
+\usepackage[hangul]{kotex}
+
+\newenvironment{itemizeReduced}{
+\begin{list}{\labelitemi}{\leftmargin=1em}
+\setlength{\itemsep}{1pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}}{\end{list}
+}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+      %backgroundcolor = \color{lightgray},
+      language = C++,
+      numbers=left,
+      stepnumber=1,
+      basicstyle=\ttfamily,
+      columns=fullflexible,
+      breaklines=true,
+      postbreak=\mbox{\textcolor{pink}{$\hookrightarrow$}\space}
+      escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+      frame=tb, % draw a frame at the top and bottom of the code block
+      tabsize=4, % tab space width
+      showstringspaces=false, % don't mark spaces in strings
+      commentstyle=\color{yellow}, % comment color
+      keywordstyle=\color{blue}, % keyword color
+      stringstyle=\color{green},
+}
+
+\usepackage{blindtext} % Package to generate dummy text throughout this template 
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.13} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+
+\usepackage{enumitem} % Customized lists
+\setlist[itemize]{noitemsep} % Make itemize lists more compact
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\roman{subsection}} % roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+% Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage{titling} % Customizing the title section
+
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\setlength{\droptitle}{-4\baselineskip} % Move the title up
+
+\pretitle{\begin{center}\Huge\bfseries} % Article title formatting
+\posttitle{\end{center}} % Article title closing formatting
+\title{자료구조 HW6} % Article title
+\author{%
+\normalsize B711222 \textsc{박조은} \\ % Your name
+\normalsize Hongik University \\ % Your institution
+\normalsize \href{mailto:mrnglory@mail.hongik.ac.kr}{mrnglory@mail.hongik.ac.kr} % Your email address
+%\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
+%\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
+%\normalsize University of Utah \\ % Second author's institution
+%\normalsize \href{mailto:jane@smith.com}{jane@smith.com} % Second author's email address
+}
+\date{\today} % Leave empty to omit a date
+\renewcommand{\maketitlehookd}{%
+
+}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+% Print the title
+\maketitle
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{List of Source Files}
+\begin{itemizeReduced}
+\item hw6
+\begin{itemizeReduced}
+    \item hw6.cpp
+    \item list.h
+    \item list.cpp
+    \item makefile
+    \item input.in
+    \end{itemizeReduced}
+\end{itemizeReduced}
+%------------------------------------------------
+
+\section{hw6}
+
+\subsection{hw6.cpp}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+#include "list.h"
+using namespace std;
+
+int main()
+{
+	IntList il;
+	int input;
+
+	cout << "============ Input =============" << endl;
+
+		while (1)
+		{
+			// -1 을 받을 때 까지 반복
+			cin >> input;
+
+			if (input == -1)
+				break;
+
+			il.Insert(input);
+
+			cout << il;
+		}
+
+	cout << "============= Delete ============" << endl;
+
+		input = 0;
+
+		while (1)
+		{
+			// -1 을 받을 때 까지 반복
+			cin >> input;
+
+			if (input == -1)
+				break;
+
+			il.Delete(input);
+
+			cout << il;
+	}
+
+	// Push_Front 와 Push_Back 은 2회씩.
+	cout << "========== Push_Front ===========" << endl;
+
+		cin >> input;
+		il.Push_Front(input);
+		cout << il;
+
+		cin >> input;
+		il.Push_Front(input);
+		cout << il;
+
+	cout << "=========== Push_Back ===========" << endl;
+
+		cin >> input;
+		il.Push_Back(input);
+		cout << il;
+
+		cin >> input;
+		il.Push_Back(input);
+		cout << il;
+
+	return 0;
+}
+\end{lstlisting}
+
+\subsection{list.h}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+using namespace std;
+
+struct Node
+{
+	Node (int d = 0, Node* ptr = NULL) : data(d), link(ptr) {}
+
+	int data;
+	Node* link;
+};
+
+struct IntList
+{
+	IntList()
+	{
+		last = first = NULL;
+	}
+
+	void Push_Back(int);	// 리스트 뒤에 삽입 중복 허용
+	void Push_Front(int);	// 리스트 앞에 삽입 중복 허용
+	void Insert(int);	// 정렬되어있다는 가정 하에 제 위치에 삽입
+	void Delete(int);	// 리스트의 원소 삭제
+	Node *first;		// 첫 노드를 가리킴
+	Node *last;		// 마지막 노드를 가리킴
+};
+
+ostream& operator << (ostream&, IntList&);
+\end{lstlisting}
+
+\subsection{list.cpp}
+\begin{lstlisting} [basicstyle=\footnotesize]
+#include <iostream>
+#include "list.h"
+
+ostream& operator << (ostream& os, IntList& il)
+{
+	Node *ptr = il.first;
+
+	while (ptr != NULL)
+	{
+		os << ptr -> data << " ";
+		ptr = ptr -> link;
+	}
+
+	os << endl;
+
+	return os;
+}
+
+void IntList::Push_Back(int e)
+{
+	if (!first)
+		first = last = new Node(e);
+
+	else
+	{
+		last -> link = new Node(e);
+		last = last -> link;
+	}
+}
+
+void IntList::Push_Front(int e)
+{
+	Node * newbie = new Node(e);
+	newbie -> link = NULL;
+	
+	if (!first)
+	{
+		first = newbie;
+		last = newbie;
+	}
+	
+	else
+	{
+		newbie -> link = first;
+		first = newbie;
+	}
+}
+
+
+
+void IntList::Insert(int e)
+{
+	// Push_Front, Push_Back 사용할 것, 중복허용 안함
+	if (!first)
+	{
+		// 빈 리스트인 경우
+		Push_Front(e);
+	}
+
+	else if (first -> data > e)
+	{
+		// 리스트 맨 앞에 추가
+		Push_Front(e);
+	}
+
+	else if (first -> data != e)
+	{
+		Node * a = first -> link;
+		Node * b = first;
+		
+		while (a != NULL)
+		{
+			if (e > (a -> data))
+			{
+				b = a;
+				a = a -> link;
+			}
+			
+			else if (e < a -> data)
+			{
+				Node * newbie = new Node(e);
+				newbie -> link = NULL;
+			
+				newbie -> link = b -> link;
+				b -> link = newbie;
+				
+				break;
+			}		
+			
+			else if (e == a -> data)
+			{
+				break;
+			}
+		}
+		
+		if (a == NULL)
+		{
+			Push_Back(e);	
+		}
+	}
+}
+
+void IntList::Delete(int e)
+{
+	if (first -> data == e)
+	{
+		// 첫 번째 데이터를 삭제할 경우
+		Node * del_ptr = first;
+		first = first -> link;
+		delete del_ptr;
+	}
+
+	else
+	{
+		Node * a = first -> link;
+		Node * b = first;
+		
+		while (a != NULL)
+		{
+			if (e == a -> data)
+			{
+				b -> link = a -> link;
+				delete a;
+				a = b;
+				
+				break;
+			}
+			
+			b = a;
+			a = a -> link;
+		}
+		
+		if (a == NULL)
+		{
+			last = b;
+		}
+	}
+}
+\end{lstlisting}
+\begin{itemizeReduced}
+    \item[/*] 
+    \item[*] line 51 - 101: 데이터 입력 매개변수 e 를 node 의 data 로써 받아와, 각 조건에 맞게 Insert 를 구현한 함수이다. 
+    \item[*] first 인 경우, first 의 data 가 e 보다 큰 경우, first 의 data 가 e 와 다를 경우로 조건을 나누며, 후자의 경우 안에서는 계속해서 리스트의 node data 들과 e 의 대소관계를 따져나가며 data 가 오름차순으로 적절히 정렬되도록 구현하였다. 
+    \item[*] 입력값 e 에 대하여 각 node 들 사이에서의 대소관계를 앞 뒤로 따지기 위해서 line 115 - 116 과 같이 first 와 first -> link 를 가리키는 node type pointer a 와 b 를 생성하였고, 이는 while 문을 통해 한칸씩 뒤로 이동한다.
+    \item[*] 한편, Push\_Front, Push\_Back 함수를 각 조건에 맞는 부분에 사용하였으며, data 의 중복을 허용하지 않게 구현하였다.
+    \item[*] line 103 - 138: list 의 node 를 입력 매개변수 e 에 대하여 각 조건에 맞게 delete 를 구현한 함수이다. 
+    \item[*] line 108: 매개변수 e 를 data 로 가지는 node 를 삭제할 때, 해당 node 를 가리키는 pointer 를 생성한다.
+    \item[*] line 109: first -> data == e 의 경우이므로, first = first -> link 라 한다.
+    \item[*] line 110: 그제서야 삭제하고자 하는 node 를 del\_ptr 을 이용하여 지울 수 있다.
+    \item[*] line 113 - 137: first -> data != e 의 경우 delete 구현하는 코드이며, 이는 동일 조건의 Insert 함수 구현과 마찬가지로, first 와 first -> link 를 가리키는 node type pointer a, b 생성 및 while 문 통해 a != NULL 일 때까지 한 칸씩 갱신하여 반복한다. 
+    \item[*] 다만 delete 는 대소관계를 따질 필요 없이 입력받은 값이 해당 리스트 node data 중 일치하는지의 여부만 판단하면 되기 때문에, e == a -> data 의 경우만 조사한다.
+\end{itemizeReduced}
+*/
+
+%------------------------------------------------
+
+\newpage
+
+\subsection{Results}
+\subsubsection{makefile}
+\begin{lstlisting} [basicstyle=\footnotesize]
+hw6:	hw6.o list.o
+	g++ -o hw6 hw6.o list.o
+hw6.o list.o:	list.h
+\end{lstlisting}
+
+\subsubsection{input.in}
+\begin{lstlisting} [basicstyle=\footnotesize]
+1 5 4 4 3 2
+-1
+1 3 2 2 5
+-1
+1 2
+3 4
+\end{lstlisting}
+
+\subsubsection{compile}
+\begin{lstlisting} [basicstyle=\footnotesize]
+[B711222@localhost hw6d]$ ./hw6 < input.in
+============ Input =============
+1
+1 5
+1 4 5
+1 4 5
+1 3 4 5
+1 2 3 4 5
+============= Delete ============
+2 3 4 5
+2 4 5
+4 5
+4 5
+4
+========== Push_Front ===========
+1 4
+2 1 4
+=========== Push_Back ===========
+2 1 4 3
+2 1 4 3 4
+\end{lstlisting}
+
+\begin{itemizeReduced}
+    \item[/*] 어려웠던 점
+    \item[*] 결과값이 조금씩 흐트러져서 나왔었는데, Push\_Front 와 Delete 함수에서 last 에 대한 정의를 해주지 않았기 때문이라는 것을 캐치해야했던 점이 어려웠다.
+\end{itemizeReduced}
+*/
+
+\newpage
+\begin{figure}
+\centering 
+\includegraphics[scale=0.8]{linkedlist.png}
+\includegraphics[scale=0.5]{linkedlist2.png}
+\end{figure} 
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
